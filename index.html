@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS-101</title>
+    <style>
+        #hidden{
+            box-sizing: border-box;
+            background-color: aqua;
+            border: 2px solid black;
+            width: fit-content;
+        }
+        td,th{
+            border: 2px solid black;
+        }
+        button{
+            width:100px;
+            height: 50px;
+            border-radius: 10px;
+            align-content: center;
+            background-color: chartreuse;
+        }
+    </style>
+</head>
+<body>
+    <center>
+        <h1>Enter your Marks to know possible final Percentage.</h1>
+    </center>
+    <form onsubmit="return false">
+        <table class="inp">
+            <tr>
+                <th>Labs</th>
+                <th>Quizzes</th>
+                <th>Midsem</th>
+                <th>Endsem</th>
+            </tr>
+            <tr>
+                <td><label for="lab2">Lab 2: </label><input type="number" min="0" max="10" id="lab2"></td>
+                <td><label for="quiz4">Quiz 4: </label><input type="number" min="0" max="4" id="quiz4"></td>
+                <td><label for="midsem">Midsem: </label><input type="number" min="0" max="29" id="midsem"></td>
+                <td>
+                    <p>This exam is not conducted yet.</p>
+                </td>
+            </tr>
+            <tr>
+                <td><label for="lab3">Lab 3: </label><input type="number" min="0" max="15" id="lab3"></td>
+                <td><label for="quiz5">Quiz 5: </label><input type="number" min="0" max="4" id="quiz5"></td>
+            </tr>
+            <tr>
+                <td><label for="lab4">Lab 4: </label><input type="number" min="0" max="15" id="lab4"></td>
+                <td><label for="quiz6">Quiz 6: </label><input type="number" min="0" max="4" id="quiz6"></td>
+            </tr>
+            <tr>
+                <td><label for="lab5">Lab 5: </label><input type="number" min="0" max="12" id="lab5"></td>
+            </tr>
+            <tr>
+                <td><label for="lab6">Lab 6: </label><input type="number" min="0" max="12" id="lab6"></td>
+            </tr>
+            <tr>
+                <td><label for="lab7">Lab 7: </label><input type="number" min="0" max="13" id="lab7"></td>
+            </tr>
+            <tr>
+                <td><label for="lab8">Lab 8: </label><input type="number" min="0" max="12" id="lab8"></td>
+            </tr>
+        </table>
+        <button onclick="calc()">Submit </button>
+    </form>
+    <table id="hidden" style="display: none;">
+        <tr>
+            <th>Percentage in Endsem</th>
+            <th>Total Percentage</th>
+        </tr>
+        <tr>
+            <td>100</td>
+            <td id="100"></td>
+        </tr>
+        <tr>
+            <td>90</td>
+            <td id="90"></td>
+        </tr>
+        <tr>
+            <td>80</td>
+            <td id="80"></td>
+        </tr>
+        <tr>
+            <td>70</td>
+            <td id="70"></td>
+        </tr>
+        <tr>
+            <td>60</td>
+            <td id="60"></td>
+        </tr>
+        <tr>
+            <td>50</td>
+            <td id="50"></td>
+        </tr>
+        <tr>
+            <td>40</td>
+            <td id="40"></td>
+        </tr>
+        <tr>
+            <td>30</td>
+            <td id="30"></td>
+        </tr>
+        <tr>
+            <td>20</td>
+            <td id="20"></td>
+        </tr>
+        <tr>
+            <td>10</td>
+            <td id="10"></td>
+        </tr>
+        <tr>
+            <td>00</td>
+            <td id="0"></td>
+        </tr>
+    </table>
+    <script>
+        function get(a){
+            return document.getElementById(a);
+        }
+        var lab_names,lab_marks,lab_max,lab_percents,quiz_names,quiz_marks,quiz_max,quiz_percents,midsem,midsem_marks,midsem_max;
+        function initialize(){
+        lab_names=["lab2","lab3","lab4","lab5","lab6","lab7","lab8"];
+        lab_max=[10,15,15,12,12,13,12];
+        quiz_names=["quiz4","quiz5","quiz6"];
+        quiz_max=[4,4,4];
+        midsem=get("midsem");
+        midsem_max=29;
+        midsem_marks=midsem.value;
+        lab_marks=[],lab_percents=[],sorted_quiz=[];
+        quiz_marks=[],quiz_percents=[],sorted_lab=[];
+        }
+        function getMarks(){
+            for(let i=0;i<lab_names.length;i++){
+                lab_marks.push(parseInt(get(lab_names[i]).value));
+                lab_percents.push(parseInt(get(lab_names[i]).value)/lab_max[i]);
+                sorted_lab.push(parseInt(get(lab_names[i]).value)/lab_max[i]);
+            }
+            for(let i=0;i<quiz_names.length;i++){
+                quiz_marks.push(parseInt(get(quiz_names[i]).value));
+                quiz_percents.push(parseInt(get(quiz_names[i]).value)/quiz_max[i]);
+                sorted_quiz.push(parseInt(get(quiz_names[i]).value)/quiz_max[i]);
+            }
+        }
+        function remove_least(k){
+            sorted_lab.sort(function(a,b){return b-a;});
+            sorted_quiz.sort(function(a,b){return b-a;});
+            for(let i=1;i<=k;i++){
+                lab_marks.splice(lab_percents.indexOf(sorted_lab[sorted_lab.length-i]),1);
+                quiz_marks.splice(quiz_percents.indexOf(sorted_quiz[sorted_quiz.length-i]),1);
+                lab_max.splice(lab_percents.indexOf(sorted_lab[sorted_lab.length-i]),1);
+                quiz_max.splice(quiz_percents.indexOf(sorted_quiz[sorted_quiz.length-i]),1);
+            }
+        }
+        function calc(){
+            initialize();
+            getMarks();
+            remove_least(2);
+            let total_lab=0;total_lab_max=0;
+            let total_quiz=0;total_quiz_max=0;
+            let total=0;
+            for (let i = 0; i < lab_marks.length; i++) {
+                total_lab += lab_marks[i];
+                total_lab_max+=lab_max[i];
+            }
+            for (let i = 0; i < quiz_marks.length; i++) {
+                total_quiz += quiz_marks[i];
+                total_quiz_max+=quiz_max[i];
+            }
+            total=(midsem_marks*30/midsem_max)+(total_quiz*15/total_quiz_max)+(total_lab*15/total_lab_max);
+            for(let i=0;i<=100;i+=10){
+                get(i.toString()).innerText=Math.round((total+i*0.4 + Number.EPSILON) * 100) / 100;
+            }
+            get("hidden").style.display="block";
+        }
+    </script>
+</body>
+</html>
